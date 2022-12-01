@@ -1,18 +1,18 @@
 import { useState, useEffect } from 'react'
 import Blog from './components/Blog'
+import Notification from './components/Notification'
 import blogService from './services/blogs'
 import loginService from './services/login'
 
 const App = () => {
   const [blogs, setBlogs] = useState([])
-  const [errorMessage, setErrorMessage] = useState(null)
   const [username, setUsername] = useState('') 
   const [password, setPassword] = useState('') 
   const [user, setUser] = useState(null) 
   const [title, setTitle] = useState('')
   const [author, setAuthor] = useState('')
   const [url, setUrl] = useState('')
-
+  const [message, setMessage] = useState(null)
 
   useEffect(() => {
     blogService.getAll().then(blogs =>
@@ -42,15 +42,17 @@ const App = () => {
       )
       blogService.setToken(user.token)
       setUser(user)
+      setMessage(null)
       setUsername('')
       setPassword('')
     } catch (exception) {
-      setErrorMessage('Wrong credentials')
+      setMessage('wrong username or password')
       setTimeout(() => {
-        setErrorMessage(null)
+        setMessage(null)
       }, 5000)
     }
   }
+
   const clearBlogForm = () => {
     setTitle('')
     setAuthor('')
@@ -66,9 +68,28 @@ const App = () => {
     }
     const newBlog = await blogService.create(blogObject)      
     setBlogs(blogs.concat(newBlog))
+    setMessage(`a new blog ${title} by ${author} added`)
+    setTimeout(() => {
+      setMessage(null)
+    }, 5000)
     clearBlogForm()
   }
 
+  
+  const blogsRenderer = () => (
+    <div>
+        {blogs.map(blog =>
+          <Blog key={blog.id} blog={blog} />
+          )}
+    </div>
+  )
+  
+  const logout = () => {
+    window.localStorage.clear()
+    setUser(null)
+    setMessage(null)
+  }
+  
   const loginForm = () => (
     <form onSubmit={handleLogin}>
       <div>
@@ -92,19 +113,6 @@ const App = () => {
       <button type="submit">login</button>
     </form>      
   )
-
-  const blogsRenderer = () => (
-    <div>
-        {blogs.map(blog =>
-          <Blog key={blog.id} blog={blog} />
-        )}
-    </div>
-  )
-
-  const logout = () => {
-    window.localStorage.clear()
-    setUser(null)
-  }
 
   const blogForm = () => (
     <form onSubmit={addBlog}>
@@ -145,11 +153,13 @@ const App = () => {
         ?
         <div>
           <h2><b>log in to application</b></h2>
+          <Notification message={message} color={'red'}/>
           {loginForm()} 
         </div>
         :
         <div>
           <h2><b>blogs</b></h2>
+          <Notification message={message} color={'green'}/>
           <p>{user.name} logged in
           <button onClick={logout}>logout</button>
           </p>
