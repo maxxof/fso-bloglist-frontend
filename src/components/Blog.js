@@ -1,10 +1,9 @@
 import { useState } from 'react'
 
-const Blog = ({ blog }) => {
+const Blog = ({ blog, updateBlog }) => {
   const [fullView, setFullView] = useState(false)
   const [buttonLabel, setButtonLabel] = useState('view')
   
-
   const blogStyle = {
     paddingTop: 10,
     paddingLeft: 2,
@@ -12,6 +11,7 @@ const Blog = ({ blog }) => {
     borderWidth: 1,
     marginBottom: 5
   }
+
   const toggleView = () => {
     setFullView(!fullView)
     fullView === true ?
@@ -19,6 +19,16 @@ const Blog = ({ blog }) => {
       setButtonLabel('hide')
   }
 
+  const handleLike = (event) => {
+    event.preventDefault()
+    updateBlog(blog.id, {
+      user: blog.user.id,
+      likes: blog.likes + 1,
+      author: blog.author,
+      title: blog.title,
+      url: blog.url
+    })
+  }
 
   return (
     <div style={blogStyle}>
@@ -27,7 +37,7 @@ const Blog = ({ blog }) => {
       {fullView === true ?
         <div>
           <p>{blog.url}</p>
-          <p>likes {blog.likes}<button>like</button></p>
+          <p>likes {blog.likes}<button onClick={handleLike}>like</button></p>
           <p>{blog.user.name}</p>
         </div>
         :

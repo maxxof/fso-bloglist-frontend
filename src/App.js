@@ -57,7 +57,8 @@ const App = () => {
 
   const addBlog = async (blogObject) => {
     blogFormRef.current.toggleVisibility()
-    const newBlog = await blogService.create(blogObject)      
+    const newBlog = await blogService.create(blogObject)
+    console.log(newBlog)      
     setBlogs(blogs.concat(newBlog))
     setMessage(`a new blog ${blogObject.title} by ${blogObject.author} added`)
     setTimeout(() => {
@@ -65,10 +66,15 @@ const App = () => {
     }, 5000)
   }
 
+  const updateBlog = async (id, blogObject) => {
+    const updatedBlog = await blogService.update(id, blogObject)
+    setBlogs(blogs.map(blog => blog.id !== id ? blog : updatedBlog))
+  }
+
   const blogsRenderer = () => (
     <div>
         {blogs.map(blog =>
-          <Blog key={blog.id} blog={blog} />
+          <Blog key={blog.id} blog={blog} updateBlog={updateBlog}/>
           )}
     </div>
   )
@@ -102,8 +108,7 @@ const App = () => {
           <p>{user.name} logged in
           <button onClick={logout}>logout</button>
           </p>
-          <h2><b>create new</b></h2>
-          <Togglable buttonLabel="new blog" ref={blogFormRef}>
+          <Togglable buttonLabel="create new blog" ref={blogFormRef}>
             <BlogForm createBlog={addBlog} />
           </Togglable>
           {blogsRenderer()}
