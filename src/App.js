@@ -55,7 +55,6 @@ const App = () => {
     }
   }
 
-
   const addBlog = async (blogObject) => {
     blogFormRef.current.toggleVisibility()
     const newBlog = await blogService.create(blogObject)      
@@ -66,7 +65,6 @@ const App = () => {
     }, 5000)
   }
 
-  
   const blogsRenderer = () => (
     <div>
         {blogs.map(blog =>
@@ -82,7 +80,6 @@ const App = () => {
   }
 
   const blogFormRef = useRef()
-
 
   return (
     <div>
