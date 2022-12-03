@@ -4,7 +4,6 @@ import PropTypes from 'prop-types'
 const Blog = ({ blog, updateBlog, username, deleteBlog }) => {
   const [fullView, setFullView] = useState(false)
   const [buttonLabel, setButtonLabel] = useState('view')
-  
   const blogStyle = {
     paddingTop: 10,
     paddingLeft: 2,
@@ -55,7 +54,7 @@ const Blog = ({ blog, updateBlog, username, deleteBlog }) => {
         :
         ''
       }
-    </div>  
+    </div>
   )
 }
 

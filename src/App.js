@@ -11,15 +11,15 @@ import loginService from './services/login'
 
 const App = () => {
   const [blogs, setBlogs] = useState([])
-  const [username, setUsername] = useState('') 
-  const [password, setPassword] = useState('') 
-  const [user, setUser] = useState(null) 
+  const [username, setUsername] = useState('')
+  const [password, setPassword] = useState('')
+  const [user, setUser] = useState(null)
   const [message, setMessage] = useState(null)
 
   useEffect(() => {
     blogService.getAll().then(blogs =>
       setBlogs(blogs.sort((a, b) => b.likes - a.likes))
-    )  
+    )
   }, [])
 
   useEffect(() => {
@@ -33,7 +33,6 @@ const App = () => {
 
   const handleLogin = async (event) => {
     event.preventDefault()
-    
     try {
       const user = await loginService.login({
         username, password,
@@ -58,7 +57,7 @@ const App = () => {
   const addBlog = async (blogObject) => {
     blogFormRef.current.toggleVisibility()
     const newBlog = await blogService.create(blogObject)
-    console.log(newBlog)      
+    console.log(newBlog)
     setBlogs(blogs.concat(newBlog))
     setMessage(`a new blog ${blogObject.title} by ${blogObject.author} added`)
     setTimeout(() => {
@@ -79,16 +78,15 @@ const App = () => {
 
   const blogsRenderer = () => (
     <div>
-        {blogs.map(blog =>
-          <Blog key={blog.id} 
-            blog={blog} 
-            updateBlog={updateBlog} 
-            deleteBlog={deleteBlog} 
-            username={user.username}/>
-          )}
+      {blogs.map(blog =>
+        <Blog key={blog.id}
+          blog={blog}
+          updateBlog={updateBlog}
+          deleteBlog={deleteBlog}
+          username={user.username}/>
+      )}
     </div>
   )
-  
   const logout = () => {
     window.localStorage.clear()
     setUser(null)
@@ -99,12 +97,12 @@ const App = () => {
 
   return (
     <div>
-      {user === null 
+      {user === null
         ?
         <div>
           <h2><b>log in to application</b></h2>
           <Notification message={message} color={'red'}/>
-          <LoginForm 
+          <LoginForm
             username={username}
             password={password}
             handleUsernameChange={({ target }) => setUsername(target.value)}
@@ -116,7 +114,7 @@ const App = () => {
           <h2><b>blogs</b></h2>
           <Notification message={message} color={'green'}/>
           <p>{user.name} logged in
-          <button onClick={logout}>logout</button>
+            <button onClick={logout}>logout</button>
           </p>
           <Togglable buttonLabel="create new blog" ref={blogFormRef}>
             <BlogForm createBlog={addBlog} />
