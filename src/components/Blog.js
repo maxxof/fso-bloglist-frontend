@@ -1,6 +1,6 @@
 import { useState } from 'react'
 
-const Blog = ({ blog, updateBlog }) => {
+const Blog = ({ blog, updateBlog, username, deleteBlog }) => {
   const [fullView, setFullView] = useState(false)
   const [buttonLabel, setButtonLabel] = useState('view')
   
@@ -30,6 +30,13 @@ const Blog = ({ blog, updateBlog }) => {
     })
   }
 
+  const handleDelete = (event) => {
+    event.preventDefault()
+    if (window.confirm(`Remove blog ${blog.title} by ${blog.author}`)) {
+      deleteBlog(blog.id)
+    }
+  }
+
   return (
     <div style={blogStyle}>
       {blog.title} {blog.author}
@@ -39,6 +46,10 @@ const Blog = ({ blog, updateBlog }) => {
           <p>{blog.url}</p>
           <p>likes {blog.likes}<button onClick={handleLike}>like</button></p>
           <p>{blog.user.name}</p>
+          {username === blog.user.username ?
+            <button onClick={handleDelete}>remove</button> :
+            ''
+          }
         </div>
         :
         ''

@@ -72,10 +72,19 @@ const App = () => {
     setBlogs(updatedBlogs.sort((a, b) => b.likes - a.likes))
   }
 
+  const deleteBlog = async id => {
+    await blogService.deleteBlog(id)
+    setBlogs(blogs.filter(blog => blog.id !== id))
+  }
+
   const blogsRenderer = () => (
     <div>
         {blogs.map(blog =>
-          <Blog key={blog.id} blog={blog} updateBlog={updateBlog}/>
+          <Blog key={blog.id} 
+            blog={blog} 
+            updateBlog={updateBlog} 
+            deleteBlog={deleteBlog} 
+            username={user.username}/>
           )}
     </div>
   )
