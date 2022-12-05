@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import PropTypes from 'prop-types'
+// import PropTypes from 'prop-types'
 
 const Blog = ({ blog, updateBlog, username, deleteBlog }) => {
   const [fullView, setFullView] = useState(false)
@@ -38,7 +38,7 @@ const Blog = ({ blog, updateBlog, username, deleteBlog }) => {
   }
 
   return (
-    <div style={blogStyle}>
+    <div style={blogStyle} className='blog'>
       {blog.title} {blog.author}
       <button onClick={toggleView}>{buttonLabel}</button>
       {fullView === true ?
@@ -58,11 +58,11 @@ const Blog = ({ blog, updateBlog, username, deleteBlog }) => {
   )
 }
 
-Blog.propTypes = {
-  blog: PropTypes.object.isRequired,
-  updateBlog: PropTypes.func.isRequired,
-  username: PropTypes.string.isRequired,
-  deleteBlog: PropTypes.func.isRequired
-}
+// Blog.propTypes = {
+//   blog: PropTypes.object.isRequired,
+//   updateBlog: PropTypes.func.isRequired,
+//   username: PropTypes.string.isRequired,
+//   deleteBlog: PropTypes.func.isRequired
+// }
 
 export default Blog
