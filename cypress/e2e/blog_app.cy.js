@@ -67,7 +67,7 @@ describe('Blog app', function() {
           .click()
           .get('#like-button')
           .click()
-        cy.contains('likes 1')
+        cy.contains('likes 1') 
       })
     })
   })
