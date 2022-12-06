@@ -1,4 +1,5 @@
 describe('Blog app', function() {
+
   beforeEach(function() {
     cy.request('POST', 'http://localhost:3003/api/testing/reset')
     const user = {
@@ -33,6 +34,24 @@ describe('Blog app', function() {
         .and('have.css', 'color', 'rgb(255, 0, 0)')
       
       cy.get('html').should('not.contain', 'max logged in')
+    })
+  })
+
+  describe('When logged in', function() {
+    beforeEach(function() {
+      cy.get('#username').type('maxxof')
+      cy.get('#password').type('opsec')
+      cy.get('#login-button').click()
+    })
+
+    it('A blog can be created', function() {
+      cy.contains('create new blog').click()
+      cy.get('#title').type('new title')
+      cy.get('#author').type('new author')
+      cy.get('#url').type('new url')
+      cy.get('#create-button').click()
+
+      cy.contains('new title new author')
     })
   })
 })
