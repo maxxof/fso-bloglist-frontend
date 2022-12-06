@@ -63,11 +63,16 @@ describe('Blog app', function() {
 
       it('User can like a blog', function() {
         cy.contains('first blog first author')
-          .get('#view-button')
-          .click()
-          .get('#like-button')
-          .click()
+          .contains('view').click()
+        cy.contains('like').click()
         cy.contains('likes 1') 
+      })
+
+      it('User that created a blog can delete it', function () {
+        cy.contains('second blog second author')
+          .contains('view').click()
+        cy.contains('remove').click()
+        cy.get('html').should('not.contain', 'second blog second author')
       })
     })
   })
