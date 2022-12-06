@@ -39,6 +39,7 @@ describe('Blog app', function() {
 
   describe('When logged in', function() {
     beforeEach(function() {
+      cy.login({ username: 'maxxof', password: 'opsec' })
       cy.get('#username').type('maxxof')
       cy.get('#password').type('opsec')
       cy.get('#login-button').click()
@@ -52,6 +53,22 @@ describe('Blog app', function() {
       cy.get('#create-button').click()
 
       cy.contains('new title new author')
+    })
+
+    describe('and some blogs blogs exist', function () {
+      beforeEach(function () {
+        cy.createBlog({ title: 'first blog', author: 'first author', url: 'first url' })
+        cy.createBlog({ title: 'second blog', author: 'second author', url: 'second url' })
+      })
+
+      it('User can like a blog', function() {
+        cy.contains('first blog first author')
+          .get('#view-button')
+          .click()
+          .get('#like-button')
+          .click()
+        cy.contains('likes 1')
+      })
     })
   })
 })

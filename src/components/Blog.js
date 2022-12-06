@@ -40,11 +40,11 @@ const Blog = ({ blog, updateBlog, username, deleteBlog }) => {
   return (
     <div style={blogStyle} className='blog'>
       {blog.title} {blog.author}
-      <button onClick={toggleView}>{buttonLabel}</button>
+      <button id="view-button" onClick={toggleView}>{buttonLabel}</button>
       {fullView === true ?
         <div>
           <p>{blog.url}</p>
-          <p>likes {blog.likes}<button onClick={handleLike}>like</button></p>
+          <p>likes {blog.likes}<button id="like-button" onClick={handleLike}>like</button></p>
           <p>{blog.user.name}</p>
           {username === blog.user.username ?
             <button onClick={handleDelete}>remove</button> :
