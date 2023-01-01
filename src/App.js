@@ -9,12 +9,23 @@ import Togglable from './components/Togglable'
 import blogService from './services/blogs'
 import loginService from './services/login'
 
+import { useDispatch, useSelector } from 'react-redux'
+// import { initializeBlogs } from './reducers/blogReducer'
+import { setNotification } from './reducers/notificationReducer'
+
+
 const App = () => {
+  const dispatch = useDispatch()
+  const notification = useSelector(state => state.notification)
+
   const [blogs, setBlogs] = useState([])
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
   const [user, setUser] = useState(null)
-  const [message, setMessage] = useState(null)
+
+  // useEffect(() => {
+  //   dispatch(initializeBlogs()) 
+  // }, [dispatch]) 
 
   useEffect(() => {
     blogService.getAll().then(blogs =>
@@ -43,14 +54,11 @@ const App = () => {
       )
       blogService.setToken(user.token)
       setUser(user)
-      setMessage(null)
+      dispatch(setNotification(null))
       setUsername('')
       setPassword('')
     } catch (exception) {
-      setMessage('wrong username or password')
-      setTimeout(() => {
-        setMessage(null)
-      }, 5000)
+      dispatch(setNotification('wrong username or password'))
     }
   }
 
@@ -59,10 +67,7 @@ const App = () => {
     const newBlog = await blogService.create(blogObject)
     console.log(newBlog)
     setBlogs(blogs.concat(newBlog))
-    setMessage(`a new blog ${blogObject.title} by ${blogObject.author} added`)
-    setTimeout(() => {
-      setMessage(null)
-    }, 5000)
+    dispatch(setNotification(`a new blog ${blogObject.title} by ${blogObject.author} added`))
   }
 
   const updateBlog = async (id, blogObject) => {
@@ -90,7 +95,7 @@ const App = () => {
   const logout = () => {
     window.localStorage.clear()
     setUser(null)
-    setMessage(null)
+    dispatch(setNotification(null))
   }
 
   const blogFormRef = useRef()
@@ -101,7 +106,7 @@ const App = () => {
         ?
         <div>
           <h2><b>log in to application</b></h2>
-          <Notification message={message} color={'red'}/>
+          <Notification message={notification} color={'red'}/>
           <LoginForm
             username={username}
             password={password}
@@ -112,7 +117,7 @@ const App = () => {
         :
         <div>
           <h2><b>blogs</b></h2>
-          <Notification message={message} color={'green'}/>
+          <Notification message={notification} color={'green'}/>
           <p>{user.name} logged in
             <button onClick={logout}>logout</button>
           </p>
