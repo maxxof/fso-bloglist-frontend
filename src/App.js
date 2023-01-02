@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
 
 import Blog from './components/Blog'
 import Notification from './components/Notification'
@@ -9,19 +10,18 @@ import Togglable from './components/Togglable'
 import blogService from './services/blogs'
 import loginService from './services/login'
 
-import { useDispatch, useSelector } from 'react-redux'
 import { initializeBlogs, createBlog, likeBlog, removeBlog } from './reducers/blogReducer'
 import { setNotification } from './reducers/notificationReducer'
-
+import { setUser } from './reducers/userReducer'
 
 const App = () => {
   const dispatch = useDispatch()
   const notification = useSelector(state => state.notification)
   const blogs = useSelector(state => state.blogs)
+  const user = useSelector(state => state.user)
 
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
-  const [user, setUser] = useState(null)
 
   useEffect(() => {
     dispatch(initializeBlogs()) 
@@ -31,7 +31,7 @@ const App = () => {
     const loggedUserJSON = window.localStorage.getItem('loggedBloglistappUser')
     if (loggedUserJSON) {
       const user = JSON.parse(loggedUserJSON)
-      setUser(user)
+      dispatch(setUser(user))
       blogService.setToken(user.token)
     }
   }, [])
@@ -47,7 +47,7 @@ const App = () => {
         'loggedBloglistappUser', JSON.stringify(user)
       )
       blogService.setToken(user.token)
-      setUser(user)
+      dispatch(setUser(user))
       dispatch(setNotification(null))
       setUsername('')
       setPassword('')
@@ -69,6 +69,14 @@ const App = () => {
   const deleteBlog = async id => {
     dispatch(removeBlog(id))
   }
+  
+  const logout = () => {
+    window.localStorage.clear()
+    dispatch(setUser(null))
+    dispatch(setNotification(null))
+  }
+  
+  const blogFormRef = useRef()
 
   const blogsRenderer = () => (
     <div>
@@ -81,13 +89,6 @@ const App = () => {
       )}
     </div>
   )
-  const logout = () => {
-    window.localStorage.clear()
-    setUser(null)
-    dispatch(setNotification(null))
-  }
-
-  const blogFormRef = useRef()
 
   return (
     <div>

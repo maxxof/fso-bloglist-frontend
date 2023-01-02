@@ -1,11 +1,10 @@
 import { createSlice } from '@reduxjs/toolkit'
 
-const initialState = null
 let timeoutID
 
 const notificationSlice = createSlice({
   name: 'notification',
-  initialState,
+  initialState: null,
   reducers: {
     setNotif(state, action) {
       const content = action.payload
