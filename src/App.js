@@ -6,13 +6,26 @@ import Notification from './components/Notification'
 import LoginForm from './components/LoginForm'
 import BlogForm from './components/BlogForm'
 import Togglable from './components/Togglable'
+import Users from './components/Users'
 
 import blogService from './services/blogs'
 import loginService from './services/login'
+import userService from './services/users'
 
 import { initializeBlogs, createBlog, likeBlog, removeBlog } from './reducers/blogReducer'
 import { setNotification } from './reducers/notificationReducer'
 import { setUser } from './reducers/userReducer'
+
+import {
+  Routes,
+  Route,
+  // Link,
+  // Navigate,
+  // useParams,
+  // useNavigate,
+  // useMatch
+} from 'react-router-dom'
+
 
 const App = () => {
   const dispatch = useDispatch()
@@ -20,8 +33,13 @@ const App = () => {
   const blogs = useSelector(state => state.blogs)
   const user = useSelector(state => state.user)
 
+  
+  const [users, setUsers] = useState([])
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
+
+  userService.getAll()
+    .then(response => setUsers(response))
 
   useEffect(() => {
     dispatch(initializeBlogs()) 
@@ -89,7 +107,7 @@ const App = () => {
       )}
     </div>
   )
-
+  
   return (
     <div>
       {user === null
@@ -108,13 +126,20 @@ const App = () => {
         <div>
           <h2><b>blogs</b></h2>
           <Notification message={notification} color={'green'}/>
-          <p>{user.name} logged in
-            <button onClick={logout}>logout</button>
-          </p>
-          <Togglable buttonLabel="create new blog" ref={blogFormRef}>
-            <BlogForm createBlog={addBlog} />
-          </Togglable>
-          {blogsRenderer()}
+          <p>{user.name} logged in</p>
+          <p><button onClick={logout}>logout</button></p>
+
+          <Routes>
+            <Route path="/" element={
+              <>
+                <Togglable buttonLabel="create new blog" ref={blogFormRef}>
+                  <BlogForm createBlog={addBlog} />
+                </Togglable>
+                {blogsRenderer()}
+              </>
+            } />
+            <Route path="/users" element={<Users users={users} />} />
+          </Routes>
         </div>
       }
     </div>
