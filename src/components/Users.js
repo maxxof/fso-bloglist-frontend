@@ -1,13 +1,17 @@
-const UserLine = ({ name, blogs }) => {
+import { Link } from 'react-router-dom'
+
+const UserLine = ({ user }) => {
   return (
     <tr>
-      <td>{name}</td>
-      <td>{blogs}</td>
+      <td>
+        <Link to={`/users/${user.id}`}>{user.name}</Link>
+      </td>
+      <td>{user.blogs.length}</td>
     </tr>
   )
 }
 
-const Users = ({ users }) => {
+const UsersList = ({ users }) => {
   return (
     <div>
       <h2>Users</h2>
@@ -18,7 +22,7 @@ const Users = ({ users }) => {
             <td><strong>blogs created</strong></td>
           </tr>
           {users.map(user =>
-            <UserLine key={user.id} name={user.name} blogs={user.blogs.length} />
+            <UserLine key={user.id} user={user} />
           )}
         </tbody>
       </table>
@@ -26,4 +30,4 @@ const Users = ({ users }) => {
   )
 }
 
-export default Users
+export default UsersList

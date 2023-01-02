@@ -6,7 +6,8 @@ import Notification from './components/Notification'
 import LoginForm from './components/LoginForm'
 import BlogForm from './components/BlogForm'
 import Togglable from './components/Togglable'
-import Users from './components/Users'
+import UsersList from './components/Users'
+import User from './components/User'
 
 import blogService from './services/blogs'
 import loginService from './services/login'
@@ -19,11 +20,11 @@ import { setUser } from './reducers/userReducer'
 import {
   Routes,
   Route,
+  useMatch,
   // Link,
   // Navigate,
   // useParams,
   // useNavigate,
-  // useMatch
 } from 'react-router-dom'
 
 
@@ -107,7 +108,12 @@ const App = () => {
       )}
     </div>
   )
-  
+
+  const match = useMatch('/users/:id')
+  const blogger = match
+    ? users.find(user => user.id === match.params.id)
+    : null
+
   return (
     <div>
       {user === null
@@ -138,7 +144,8 @@ const App = () => {
                 {blogsRenderer()}
               </>
             } />
-            <Route path="/users" element={<Users users={users} />} />
+            <Route path="/users" element={<UsersList users={users} />} />
+            <Route path="/users/:id" element={<User user={blogger}/>} />
           </Routes>
         </div>
       }
